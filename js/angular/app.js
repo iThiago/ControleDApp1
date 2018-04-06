@@ -1,0 +1,64 @@
+var app = angular.module('app',['ngRoute','LocalStorageModule','services']);
+
+app.config(function($routeProvider, $locationProvider,$httpProvider)
+{
+   // remove o # da url
+ //  $locationProvider.html5Mode(true);
+  // $locationProvider.hashPrefix = '!';
+    $httpProvider.interceptors.push('authInterceptorService');
+
+   $routeProvider
+
+   // para a rota '/', carregaremos o template home.html e o controller 'HomeCtrl'
+   .when('/', {
+      templateUrl : '/home/home.html',
+      controller     : 'HomeCtrl',
+   })
+   .when('/login/:msgError', {
+      templateUrl : '/login/login.html',
+      controller     : 'LoginCtrl',
+   })
+
+   .when('/login', {
+      templateUrl : '/login/login.html',
+      controller     : 'LoginCtrl',
+   })
+
+   // para a rota '/sobre', carregaremos o template sobre.html e o controller 'SobreCtrl'
+   .when('/home', {
+      templateUrl : '/home/home.html',
+      controller  : 'HomeCtrl',
+   })
+   .when('/adicionarProduto', {
+      templateUrl : '/produto/adicionar.html',
+      controller  : 'ProdutoCtrl',
+   })
+   .when('/adicionarProduto/:id', {
+      templateUrl : '/produto/adicionar.html',
+      controller  : 'ProdutoCtrl',
+   })
+    .when('/listarProdutos', {
+      templateUrl : '/produto/listar.html',
+      controller  : 'ProdutoCtrl',
+   })
+
+    .when('/cadastrarPaciente', {
+      templateUrl : '/usuario/cadastrarPaciente.html',
+      controller  : 'UsuarioCtrl',
+   })
+    .when('/cadastrarPaciente/:id', {
+      templateUrl : '/usuario/cadastrarPaciente.html',
+      controller  : 'UsuarioCtrl',
+   })
+    .when('/listarPacientes', {
+      templateUrl : '/usuario/listar.html',
+      controller  : 'UsuarioCtrl',
+   })
+   // para a rota '/contato', carregaremos o template contato.html e o controller 'ContatoCtrl'
+   .when('/contato', {
+      templateUrl : 'app/views/contato.html',
+      controller  : 'ContatoCtrl',
+   })
+   // caso não seja nenhum desses, redirecione para a rota '/'
+   .otherwise ({ redirectTo: '/' });
+});
