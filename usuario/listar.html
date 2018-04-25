@@ -1,4 +1,4 @@
-<div class="card mb-3">
+<div class="card mb-3" ng-init="initListaPacientes()">
   <div class="card-header">
     <i class="fa fa-table"></i> Data Table Example</div> <div class="card-body">
       <div class="table-responsive" ng-controller='ProdutoCtrl'>
@@ -33,7 +33,6 @@
               <td>{{usuario.QtdInsulinaPorGramaCarbo}}</td>
               <td align="center">
                 <a href="javascript:void(0);" class="btn btn-info btn-sm" ng-click="alterarPaciente(usuario.Id)">Editar</a>
-                
               </td>
             </tr>
           </tbody>

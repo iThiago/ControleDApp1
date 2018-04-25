@@ -14,7 +14,7 @@ app.controller('ProdutoCtrl',['$scope','$location','ProdutosFactory','ProdutoFac
 				});
 			}
 		}
-		
+
 		$scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
 			$("#dataTable").DataTable();
 		});
@@ -62,10 +62,12 @@ app.controller('ProdutoCtrl',['$scope','$location','ProdutosFactory','ProdutoFac
 						debugger;
 						$scope.msgError = parseErrors(errorResponse.data);
 					}
-				}else if(errorResponse.Exception)
-				$scope.msgError = "Ocorreu um erro ao salvar: " + errorResponse.Exception;
+				}else if(errorResponse.Exception){
+					$scope.msgError = "Ocorreu um erro ao salvar: " + errorResponse.Exception;
+				}
 				else
 					$scope.msgError = "Ocorreu um erro ao salvar!"
+
 				$scope.msgSucesso = "";
 			});
 		}

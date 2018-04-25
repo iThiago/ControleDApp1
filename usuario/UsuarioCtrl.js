@@ -1,12 +1,22 @@
-app.controller('UsuarioCtrl',['$scope','$location','UsuariosFactory','UsuarioFactory','$routeParams',
-	function($scope,$location,UsuariosFactory,UsuarioFactory,$routeParams){
+app.controller('UsuarioCtrl',['$scope','$location','UsuariosFactory','UsuarioFactory','$routeParams','RolesFactory','UsuariosPessoaFactory','UsuariosPacienteFactory',
+	function($scope,$location,UsuariosFactory,UsuarioFactory,$routeParams,RolesFactory,UsuariosPessoaFactory,UsuariosPacienteFactory){
 
-		$scope.usuarios = UsuariosFactory.query();
+
+		$scope.initListaPacientes = function(){
+			$scope.usuarios = UsuariosFactory.getUsuariosByUserLogado();	
+		}
+
+		
+		var isCadastroDePaciente = false;
 
 		var url = $location.$$url;
 		var id = undefined; 
+		//debugger;
+		$scope.perfis = RolesFactory.query();
+
 		if(url.indexOf("cadastrarPaciente") > 0){
 			id = $routeParams.id;
+			isCadastroDePaciente = true;
 			//debugger;
 			if(id){
 				UsuarioFactory.show({id:id}).$promise.then(function(data){
@@ -19,13 +29,6 @@ app.controller('UsuarioCtrl',['$scope','$location','UsuariosFactory','UsuarioFac
 		//var url = $location.$$url;
 
 		$scope.salvarUsuario = function(){
-
-			if($scope.usuario.Senha != $scope.confirmacaoSenha){
-				$scope.msgError = "As senhas não conferem!";
-				$scope.usuario.Senha = "";
-				$scope.confirmacaoSenha = "";
-				return;
-			}
 
 			if(id == undefined){
 				adicionarUsuario();
@@ -46,28 +49,36 @@ app.controller('UsuarioCtrl',['$scope','$location','UsuariosFactory','UsuarioFac
 			$("#dataTable").DataTable();
 		});
 
+		$scope.convertToObject = function(role){
+			$scope.selectedRole = angular.fromJson(role);
+		}
 		
 		function adicionarUsuario(){
-			UsuariosFactory.create($scope.usuario)
-			.$promise.then(function(usuario){
-				$scope.msgSucesso = "Paciente salvo com sucesso!";
-				delete $scope.usuario;
-				$scope.confirmacaoSenha = "";
-			}).catch( function(errorResponse) {
-				if(errorResponse.data){
-					if(errorResponse.data.ExceptionMessage){
-						$scope.msgError = "Ocorreu um erro ao salvar: " + 
-						errorResponse.data.ExceptionMessage;
-					}else{
-						debugger;
-						$scope.msgError = parseErrors(errorResponse.data);
-					}
-				}else if(errorResponse.Exception)
-				$scope.msgError = "Ocorreu um erro ao salvar: " + errorResponse.Exception;
-				else
-					$scope.msgError = "Ocorreu um erro ao salvar!"
-				$scope.msgSucesso = "";
-			});
+			if(!isCadastroDePaciente){
+
+				if($scope.usuario.Senha != $scope.confirmacaoSenha){
+					$scope.msgError = "As senhas não conferem!";
+					$scope.usuario.Senha = "";
+					$scope.confirmacaoSenha = "";
+					return;
+				}
+
+				$scope.usuario.Roles = new Array();
+
+				var customUserRole = {
+					RoleId: $scope.selectedRole.Id
+				};
+
+				$scope.usuario.Roles.push(customUserRole);
+
+				UsuariosPessoaFactory.create($scope.usuario)
+				.$promise.then(usuarioAdicionadoComSucesso)
+				.catch(trataException);
+			}else{
+				UsuariosPacienteFactory.cadastrarPaciente($scope.usuario)
+				.$promise.then(usuarioAdicionadoComSucesso)
+				.catch(trataException);
+			}
 		}
 
 		function alterarUsuario() {
@@ -90,6 +101,14 @@ app.controller('UsuarioCtrl',['$scope','$location','UsuariosFactory','UsuarioFac
 				$scope.msgSucesso = "";
 			});
 		}
+		
+		function usuarioAdicionadoComSucesso(usuario){
+			$scope.msgSucesso = $scope.usuario.Nome + " salvo com sucesso!";
+			delete $scope.usuario;
+			$scope.confirmacaoSenha = "";
+			$scope.msgError = "";
+		}
+
 
 		function parseErrors(response) {
 			var errors = "";
@@ -102,3 +121,22 @@ app.controller('UsuarioCtrl',['$scope','$location','UsuariosFactory','UsuarioFac
 		}
 
 	}]);
+
+
+
+	// function trataException(errorResponse) {
+		// 	if(errorResponse.data){
+		// 		if(errorResponse.data.ExceptionMessage){
+		// 			$scope.msgError = "Ocorreu um erro: " + 
+		// 			errorResponse.data.ExceptionMessage;
+		// 		}else if(errorResponse.data.Message){
+		// 			$scope.msgError = errorResponse.data.Message;
+		// 		}else{
+		// 			$scope.msgError = parseErrors(errorResponse.data);
+		// 		}
+		// 	}else if(errorResponse.Exception)
+		// 	$scope.msgError = "Ocorreu um erro: " + errorResponse.Exception;
+		// 	else
+		// 		$scope.msgError = "Ocorreu um erro!"
+		// 	$scope.msgSucesso = "";
+		// }

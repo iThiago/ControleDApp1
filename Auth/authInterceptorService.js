@@ -10,6 +10,7 @@ app.factory('authInterceptorService', ['$q', '$location', 'localStorageService',
         var authData = localStorageService.get('authorizationData');
         if (authData) {
             config.headers.Authorization = 'Bearer ' + authData.token;
+           // alert(authData.token);
         }
  
         return config;
@@ -18,7 +19,8 @@ app.factory('authInterceptorService', ['$q', '$location', 'localStorageService',
     var _responseError = function (rejection) {
         //debugger;
         if (rejection.status === 401) {
-            debugger;
+           // debugger;
+            localStorageService.remove('authorizationData');
             $location.path('/login' + '/' + "Ops...Faça login e tente novamente!");
         }
         return $q.reject(rejection);
