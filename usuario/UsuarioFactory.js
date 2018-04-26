@@ -21,7 +21,8 @@ services.factory('UsuariosPacienteFactory',function($resource){
 services.factory('UsuariosPessoaFactory',function($resource){
 
 	return $resource('http://localhost::port/api/Usuario/PostPessoa',{port: '58839'},{
-		create: {method: 'POST'}
+		create: {method: 'POST'},
+		cadastrarNovaSenha: {method: 'PUT', url:'http://localhost::port/api/Usuario/CadastrarNovaSenha'}
 	});
 
 });
@@ -32,6 +33,7 @@ services.factory('UsuarioFactory',function($resource){
 		show: {method: 'GET' },
 		showByEmail: {method: 'GET'},
 		update: {method: 'PUT'},
+		desassociarPaciente: {method: 'PUT', url:'http://localhost::port/api/Usuario/DesassociarPaciente'},
 		delete: {method: 'DELETE'}
 	});
 

@@ -1,7 +1,7 @@
 <div class="card card-register mx-auto mt-5">
   <div class="card-header">Dados do Paciente</div>
   <div class="card-body">
-    <form ng-controller="UsuarioCtrl" ng-submit="salvarUsuario()">
+    <form ng-controller="UsuarioCtrl">
       <div class="form-group">
         <div class="form-row">
           <div class="col-md-6">
@@ -44,10 +44,10 @@
     </div>  -->
     <div class="form-row">
       <div class="col-md-8">
-        <button type="submit" class="btn btn-primary btn-block" >Salvar</button>
+        <button type="submit" ng-click="salvarUsuario()" class="btn btn-primary btn-block" >Salvar</button>
       </div>
       <div class="col-md-4">
-        <button type="submit" class="btn btn-danger btn-block" ng-show="usuario.Id">Desassociar</button>
+        <button type="submit" ng-click="desassociarPaciente()" class="btn btn-danger btn-block" ng-show="usuario.Id">Desassociar</button>
       </div>
     </div>
     <div class="msgSucesso" ng-bind="msgSucesso"> </div>

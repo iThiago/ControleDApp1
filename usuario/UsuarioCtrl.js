@@ -37,8 +37,12 @@ app.controller('UsuarioCtrl',['$scope','$location','UsuariosFactory','UsuarioFac
 			}
 		};
 
-		$scope.desasociarPaciente = function(index,UsuariosFactory){
-
+		$scope.desassociarPaciente = function(){
+			debugger;
+			UsuarioFactory.desassociarPaciente({id:$scope.usuario.Id},$scope.usuario)
+			.$promise.then(function(usuario){
+				$scope.msgSucesso = "Paciente desassociado com sucesso!";
+			}).catch(trataException);
 		}
 
 		$scope.alterarPaciente = function(id){
@@ -85,21 +89,7 @@ app.controller('UsuarioCtrl',['$scope','$location','UsuariosFactory','UsuarioFac
 			UsuarioFactory.update({id:$scope.usuario.Id},$scope.usuario)
 			.$promise.then(function(usuario){
 				$scope.msgSucesso = "Paciente salvo com sucesso!";
-			}).catch( function(errorResponse) {
-				if(errorResponse.data){
-					if(errorResponse.data.ExceptionMessage){
-						$scope.msgError = "Ocorreu um erro ao salvar: " + 
-						errorResponse.data.ExceptionMessage;
-					}else{
-						debugger;
-						$scope.msgError = parseErrors(errorResponse.data);
-					}
-				}else if(errorResponse.Exception)
-				$scope.msgError = "Ocorreu um erro ao salvar: " + errorResponse.Exception;
-				else
-					$scope.msgError = "Ocorreu um erro ao salvar!"
-				$scope.msgSucesso = "";
-			});
+			}).catch(trataException);
 		}
 		
 		function usuarioAdicionadoComSucesso(usuario){

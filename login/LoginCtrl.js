@@ -4,25 +4,6 @@ app.controller('LoginCtrl', ['$scope', '$location','localStorageService',
 	function ($scope, $location,localStorageService, authService,authInterceptorService,$routeParams,UsuariosFactory) {
 
 
-		$scope.senhaTemporaria = true;
-
-		$scope.init = function(){
-			$scope.pacientesSenhaTemporaria = UsuariosFactory.queryPacientesSenhaTemporaria();
-		}
-
-
-
-		$scope.verificaSenhaTemporaria = function(){
-
-			if($scope.loginData.userName.lenght > 9){
-				$scope.pacientesSenhaTemporaria = $filter($scope.pacientesSenhaTemporaria,$scope.loginData.userName,strict);
-				alert($scope.pacientesSenhaTemporaria);
-			}
-
-		}
-
-
-	//	debugger;
 	$scope.msgError = $routeParams.msgError;
 
 	var authData = localStorageService.get('authorizationData');

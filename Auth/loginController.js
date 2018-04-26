@@ -1,19 +1,42 @@
 'use strict';
-app.controller('loginController', ['$scope', '$location', 'authService','UsuariosFactory','$filter', function ($scope, $location, authService,UsuariosFactory,$filter) {
+app.controller('loginController', ['$scope', '$location', 'authService','UsuariosFactory','UsuariosPessoaFactory','$filter', function ($scope, $location, authService,UsuariosFactory,UsuariosPessoaFactory,$filter) {
 
     $scope.loginData = {
         userName: "",
         password: "",
-        senhaTemporaria: false
+        senhaTemporaria: false,
+        senhaAtual: ""
+    };
+
+    $scope.cadastroNovaSenhaData = {
+        email: "",
+        senhaAnterior: "",
+        novaSenha: ""
+    };
+
+    $scope.init = function(){
+        $scope.senhaTemporaria = true;
+        $scope.isNovaSenha = false;
+        $scope.pacientesSenhaTemporaria = UsuariosFactory.queryPacientesSenhaTemporaria();
+        $scope.message = "";
     };
 
 
-    $scope.senhaTemporaria = true;
+    $scope.atualizaSenha = function(){
 
-    $scope.init = function(){
-        $scope.pacientesSenhaTemporaria = UsuariosFactory.queryPacientesSenhaTemporaria();
-    }
+        $scope.cadastroNovaSenhaData.email = $scope.loginData.userName;
 
+        if($scope.cadastroNovaSenhaData.novaSenha != $scope.confirmarSenha){
+            $scope.loginMsgError = "As senhas não conferem!";
+            return;
+        }
+
+        $scope.loginData.userName = $scope.cadastroNovaSenhaData.email;
+        $scope.loginData.password = $scope.cadastroNovaSenhaData.novaSenha;
+
+        UsuariosPessoaFactory.cadastrarNovaSenha($scope.cadastroNovaSenhaData).$promise.then($scope.login).catch(trataException);
+
+    };
 
 
     $scope.verificaSenhaTemporaria = function(){
@@ -23,8 +46,10 @@ app.controller('loginController', ['$scope', '$location', 'authService','Usuario
             var user = $filter('filter')($scope.pacientesSenhaTemporaria, { Email: $scope.loginData.userName });
             if(user.length == 0){
                 $scope.senhaTemporaria = false;    
+                $scope.isNovaSenha = false;
             }else{
                 $scope.senhaTemporaria = true;    
+                $scope.isNovaSenha = true;
             }
 
         }else
@@ -33,11 +58,10 @@ app.controller('loginController', ['$scope', '$location', 'authService','Usuario
         }
     }
 
-
-    $scope.message = "";
+    
     
     $scope.login = function () {
-
+        
         authService.login($scope.loginData).then(function (response) {
             $scope.msgError = "";
             $location.path('/alimento/listar');

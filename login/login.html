@@ -4,7 +4,7 @@
 <div class="card card-login mx-auto mt-5 " ng-controller="loginController" ng-controller="LoginCtrl" ng-init="init()">
 	<div class="card-header">Login</div>
 	<div class="card-body" >
-		<form ng-submit="login()">
+		<form>
 
 			<div class="form-group">
 				<label for="exampleInputEmail1">Email</label>
@@ -15,21 +15,21 @@
 				<input class="form-control" id="exampleInputPassword1" ng-model="loginData.password" type="password" placeholder="Password">
 			</div>
 
-			<div id="cadastrarNovaSenha" ng-show="">
+			<div id="cadastrarNovaSenha" ng-show="senhaTemporaria && isNovaSenha">
 
-				<div class="form-group" ng-hide="senhaTemporaria">
+				<div class="form-group" ng-show="senhaTemporaria">
 					<label for="exampleInputPassword1">Senha Atual</label>
-					<input class="form-control" id="exampleInputPassword1" ng-model="senhaAtual" type="password" placeholder="Entre com a senha que recebeu por e-mail.">
+					<input class="form-control"  ng-model="cadastroNovaSenhaData.SenhaAnterior" type="password" placeholder="Entre com a senha que recebeu por e-mail.">
 				</div>
 
-				<div class="form-group" ng-hide="senhaTemporaria">
+				<div class="form-group" ng-show="senhaTemporaria">
 					<label for="exampleInputPassword1">Senha</label>
-					<input class="form-control" id="exampleInputPassword1" ng-model="loginData.password" type="password" placeholder="Senha">
+					<input class="form-control"  ng-model="cadastroNovaSenhaData.novaSenha" type="password" placeholder="Senha">
 				</div>
 
-				<div class="form-group" ng-hide="senhaTemporaria">
+				<div class="form-group" ng-show="senhaTemporaria">
 					<label for="exampleInputPassword1">Confirme a Senha</label>
-					<input class="form-control" id="exampleInputPassword1" ng-model="confirmarSenha" type="password" placeholder="Digite a senha novamente">
+					<input class="form-control" ng-model="confirmarSenha" type="password" placeholder="Digite a senha novamente">
 				</div>
 
 			</div>
@@ -40,13 +40,22 @@
 						<input class="form-check-input" type="checkbox">Lembrar a senha?</label>
 					</div>
 				</div>
-				<button type="submit" class="btn btn-primary btn-block">Login</button>
-			</form>
-			<div class="text-center">
-				<a class="d-block small mt-3" href="#!register">Cadastre-se</a>
-				<a class="d-block small" href="forgot-password.html">Esqueceu a senha?</a>
-			</div>
+				<button type="submit" ng-click="login()" ng-hide="senhaTemporaria && isNovaSenha"
+				class="btn btn-primary btn-block">
+				Login
+			</button>
+
+			<button type="submit" ng-click="atualizaSenha()" ng-hide="!(senhaTemporaria && isNovaSenha)"
+				class="btn btn-primary btn-block">
+				Cadastrar nova Senha e Entrar
+			</button>
+
+		</form>
+		<div class="text-center">
+			<a class="d-block small mt-3" href="#!register">Cadastre-se</a>
+			<a class="d-block small" href="forgot-password.html">Esqueceu a senha?</a>
 		</div>
-		<div class="msgError" style="text-align:center;" ng-bind="loginMsgError"> </div>
 	</div>
+	<div class="loginMsgError" style="text-align:center;" ng-bind="loginMsgError"> </div>
+</div>
 
