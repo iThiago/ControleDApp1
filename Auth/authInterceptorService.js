@@ -9,7 +9,8 @@ app.factory('authInterceptorService', ['$q', '$location', 'localStorageService',
  
         var authData = localStorageService.get('authorizationData');
         if (authData) {
-            config.headers.Authorization = 'Bearer ' + authData.token;
+            debugger
+            config.headers.Authorization = 'Bearer ' + authData.access_token;
            // alert(authData.token);
         }
  

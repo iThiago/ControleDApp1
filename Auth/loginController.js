@@ -1,5 +1,6 @@
 'use strict';
-app.controller('loginController', ['$scope', '$location', 'authService','UsuariosFactory','UsuariosPessoaFactory','$filter', function ($scope, $location, authService,UsuariosFactory,UsuariosPessoaFactory,$filter) {
+app.controller('loginController', ['$scope', '$location', 'authService','UsuariosFactory',
+'UsuariosPessoaFactory','$filter','$routeParams','localStorageService', function ($scope, $location, authService,UsuariosFactory,UsuariosPessoaFactory,$filter,$routeParams,localStorageService) {
 
     $scope.loginData = {
         userName: "",
@@ -13,6 +14,27 @@ app.controller('loginController', ['$scope', '$location', 'authService','Usuario
         senhaAnterior: "",
         novaSenha: ""
     };
+    if($routeParams.msgError)
+		$scope.msgError = $routeParams.msgError;
+
+	var authData = localStorageService.get('authorizationData');
+	if (authData) {
+		var url = $location.$$url;
+
+		if(url === "/"){
+			$location.path('/home')
+		}
+	}	
+
+	console.log('entru')
+
+	$scope.logOut = function () {
+		authService.logOut();
+		$location.path('/login/');
+		$scope.msgError = "Logout efetuado."
+	}
+
+	$scope.authentication = authService.authentication;
 
     $scope.init = function(){
         $scope.senhaTemporaria = true;

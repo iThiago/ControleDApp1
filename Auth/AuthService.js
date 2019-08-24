@@ -6,7 +6,8 @@ app.factory('authService', ['$http', '$q', 'localStorageService', function ($htt
     var _authentication = {
         isAuth: false,
         userName : "",
-        NomeUsuario: ""
+        NomeUsuario: "",
+        Roles: ""
     };
 
     var _saveRegistration = function (registration) {
@@ -28,11 +29,14 @@ app.factory('authService', ['$http', '$q', 'localStorageService', function ($htt
         .then(function (response) {
 
             response = response.data;
-            localStorageService.set('authorizationData', { token: response.access_token, userName: loginData.userName, NomeUsuario: response.NomeUsuario });
-
+            
+            _authentication = response;
+            _authentication.NomeUsuario = response.NomeUsuario;
+            _authentication.Roles = response.Roles;
             _authentication.isAuth = true;
             _authentication.userName = loginData.userName;
-            _authentication.NomeUsuario = response.NomeUsuario;
+debugger
+            localStorageService.set('authorizationData', _authentication);
 
             deferred.resolve(response);
 
@@ -62,7 +66,7 @@ app.factory('authService', ['$http', '$q', 'localStorageService', function ($htt
         {
             _authentication.isAuth = true;
             _authentication.userName = authData.userName;
-            _authentication.token = authData.token;
+            _authentication.token = authData.access_token;
         }
 
     }

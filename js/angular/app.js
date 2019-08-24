@@ -12,22 +12,22 @@ app.config(function($routeProvider, $locationProvider,$httpProvider)
    // para a rota '/', carregaremos o template home.html e o controller 'HomeCtrl'
    .when('/', {
     templateUrl : '/login/login.html',
-    controller     : 'LoginCtrl',
+    controller     : 'loginController',
   })
    .when('/login/:msgError', {
     templateUrl : '/login/login.html',
-    controller     : 'LoginCtrl',
+    controller     : 'loginController',
   })
 
    .when('/login', {
     templateUrl : '/login/login.html',
-    controller     : 'LoginCtrl',
+    controller     : 'loginController',
   })
 
    // para a rota '/sobre', carregaremos o template sobre.html e o controller 'SobreCtrl'
    .when('/home', {
-    templateUrl : '/home/home.html',
-    controller  : 'HomeCtrl',
+    templateUrl : '/home/home.html'
+    // ,controller  : 'HomeCtrl',
   })
    .when('/adicionarProduto', {
     templateUrl : '/produto/adicionar.html',
